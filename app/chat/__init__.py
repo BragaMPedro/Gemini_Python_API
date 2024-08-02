@@ -1,3 +1,3 @@
-from gem_model.resources import getModel
+from gem_model.resources import createModel
 
-model = getModel()
+model = createModel()

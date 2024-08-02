@@ -3,20 +3,33 @@ import google.generativeai as genai
 from google.generativeai import GenerativeModel
 from google.ai.generativelanguage_v1beta.types import content
 
-api_key = os.getenv('GOOGLE_API_KEY')
-system_instruction = os.getenv('SYS_INSTRUCTIONS')
+def getEnv(env_name: str):
+  try:
+    env = os.getenv(env_name)
+  except env.SecretNotFoundError as e:
+    print(f'Secret not found\n\nThis expects you to create a secret named {env_name} in Colab\n\nVisit https://makersuite.google.com/app/apikey to create an API key\n\nStore that in the secrets section on the left side of the notebook (key icon)\n\nName the secret {env_name}')
+    raise e
+  except env.NotebookAccessError as e:
+    print(f'You need to grant this notebook access to the {env_name} secret in order for the notebook to access Gemini on your behalf.')
+    raise e
+  except Exception as e:
+    # unknown error
+    print(f"There was an unknown error. Ensure you have a secret {env_name} stored in Colab and it's a valid key from https://makersuite.google.com/app/apikey")
+    raise e
 
-def configureGenai():
-    genai.configure(api_key=api_key)
+  return env
 
-def getModel() -> GenerativeModel:
-    configureGenai();
-    model = genai.GenerativeModel(model_name = 'gemini-1.5-pro-latest',
-                                generation_config = generationConfig,
-                                safety_settings = safetySettings,
-                                system_instruction = system_instruction
-                              )
-    return model
+def createModel() -> GenerativeModel:
+  api_key = getEnv('GOOGLE_API_KEY')
+  system_instruction = getEnv('SYS_INSTRUCTIONS')
+  
+  genai.configure(api_key=api_key)
+  model = genai.GenerativeModel(model_name = 'gemini-1.5-pro-latest',
+                              generation_config = generationConfig,
+                              safety_settings = safetySettings,
+                              system_instruction = system_instruction
+                            )
+  return model
 
 generationConfig = {
   "temperature": 1,
