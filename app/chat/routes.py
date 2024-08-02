@@ -1,4 +1,5 @@
 #app/chat/routes.py
+from . import model
 from flask import Flask
 from flask import request, jsonify
 
@@ -6,7 +7,8 @@ app = Flask(__name__)
 
 @app.get('/chat')
 def get_chat():
-    return jsonify("chegou aqui tudo certinho"), 200
+    sft_stt = model._safety_settings
+    return jsonify("chegou aqui tudo certinho", sft_stt), 200
 
 @app.post('/chat')
 def post_chat(prompt: str):
