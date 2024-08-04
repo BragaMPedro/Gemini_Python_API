@@ -7,7 +7,7 @@ chat = model.start_chat(history=[
     {
         "role": "user",
         "parts": [
-            f"(considere a seguinte cena como a cena inicial: {scenario})",
+            f"(Considere a seguinte cena como a cena inicial:/n/n{scenario})",
         ],
     },
     {
