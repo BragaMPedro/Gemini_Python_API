@@ -1,23 +1,37 @@
-#app/chat/routes.py
-from . import model
+# app/chat/routes.py
+import json
 from flask import Flask
 from flask import request, jsonify
 
+from . import chat
+from .services import enviar_mensagem
+from .models import CustomJSONEncoder
+
 app = Flask(__name__)
+base_route = "/chat"
 
-@app.get('/chat')
+
+@app.get(base_route)
 def get_chat():
-    sft_stt = model._safety_settings
-    return jsonify("chegou aqui tudo certinho", sft_stt), 200
+    # getChatHistory
 
-@app.post('/chat')
-def post_chat(prompt: str):
-  data = request.get_json()
-  prompt = data.get('prompt')
+    return jsonify("Requisição completada; endpoint em construção"), 200
 
-  try:
-    #   res_json = enviar_mensagem(prompt)
 
-      return jsonify("Seu prompt foi: "+prompt), 200
-  except Exception as e:
-      return jsonify({'error': str(e)}), 500
+@app.post(base_route)
+def post_chat():
+    data = request.get_json()
+    prompt = data.get('prompt')
+
+    try:
+        res_json = enviar_mensagem(chat, prompt)
+        return res_json.toJsonStr(), 200
+    except Exception as e:
+        return jsonify({'req_data': prompt, 'error': str(e)}), 500
+
+
+@app.delete(f'{base_route}/renew')
+def reset_chat():
+    # chat = model.start_chat(history=[])
+
+    return jsonify("Requisição completada; endpoint em construção"), 204
