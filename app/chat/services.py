@@ -7,7 +7,7 @@ def enviar_mensagem(chat: ChatSession, prompt: str):
     response_gem = chat.send_message(prompt)
 
     res_json = json.loads(response_gem.text)
-    response_dto = ResponseDTO(res_json.get('response'))
+    response_dto = ResponseDTO(res_json)
 
     response_dto.text.replace('~', '\~') if hasattr(
         response_dto, 'text') else response_dto.text
